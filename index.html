@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Télécharger Craftpick Launcher</title>
     <style>
-        /* Styles de base pour rendre la page jolie */
+        /* Styles de base */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f0f4f8;
@@ -21,79 +21,130 @@
             background-color: #ffffff;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            max-width: 750px;
             text-align: center;
         }
         h1 {
-            color: #3b5998; /* Un bleu "cool" */
-            margin-bottom: 10px;
-            font-size: 2.2em;
+            color: #1a73e8; /* Un bleu plus dynamique pour le titre */
+            margin-bottom: 5px;
+            font-size: 2.5em;
+        }
+        .version {
+            color: #666;
+            margin-bottom: 25px;
         }
         p {
             font-size: 1.1em;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
             line-height: 1.6;
         }
-        .download-btn {
-            display: inline-block;
-            background-color: #ff6f00; /* Orange/Ambre Minecraft-like */
+        /* Style des boutons de téléchargement */
+        .download-options {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap; /* Pour la réactivité */
+            margin-bottom: 40px;
+        }
+        .dl-btn {
+            flex: 1 1 200px; /* Flexibilité pour les petites tailles d'écran */
+            display: block;
+            background-color: #ff6f00; /* Orange/Ambre */
             color: white;
-            padding: 15px 30px;
+            padding: 15px 10px;
             text-decoration: none;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 1.3em;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 4px #d85c00; /* Ombre pour l'effet 3D */
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px #d85c00;
             border: none;
-            cursor: pointer;
         }
-        .download-btn:hover {
+        .dl-btn:hover {
             background-color: #e06000;
         }
-        .download-btn:active {
+        .dl-btn:active {
             box-shadow: 0 2px #d85c00;
             transform: translateY(2px);
         }
-        .instructions {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #eef2f6;
-            border-radius: 8px;
-            text-align: left;
-            border-left: 5px solid #3b5998;
+        .platform {
+            display: block;
+            font-size: 0.8em;
+            font-weight: normal;
+            margin-top: 5px;
+            opacity: 0.9;
         }
-        .instructions h3 {
+
+        /* Style des instructions */
+        .instructions-section {
+            text-align: left;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 10px;
+            border-top: 3px solid #1a73e8;
+        }
+        .instructions-section h3 {
+            color: #1a73e8;
             margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .instruction-item {
+            margin-bottom: 15px;
+        }
+        .instruction-item strong {
             color: #3b5998;
         }
-        .instructions ul {
-            padding-left: 20px;
-        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Téléchargez le Craftpick Launcher</h1>
+        <p class="version">Version : 1.0.5</p>
         
         <p>
-            Accédez à toutes les fonctionnalités exclusives de Craftpick en téléchargeant notre lanceur officiel. 
-            Compatible avec **Windows**, **macOS** et **Linux**.
+            Sélectionnez votre système d'exploitation ci-dessous pour télécharger la version optimisée du **Craftpick Launcher**.
+            Compatible avec Windows, Linux et Mac.
         </p>
 
-        <a href="#" class="download-btn">
-            TÉLÉCHARGER LE LAUNCHER (VERSION 1.0)
-        </a>
+        <div class="download-options">
+            <a href="https://github.com/louisoff84/craftpick-Launcher/releases/download/1.0.5/craftpick-Launcher-win-x64.exe" class="dl-btn">
+                TÉLÉCHARGER
+                <span class="platform">Windows (64-bit) .exe</span>
+            </a>
 
-        <div class="instructions">
-            <h3>Instructions après téléchargement :</h3>
-            <ul>
-                <li>Double-cliquez sur le fichier téléchargé.</li>
-                <li>Si un avertissement de sécurité apparaît, cliquez sur "Exécuter" ou "Garder".</li>
-                <li>Suivez les étapes d'installation simples pour commencer à jouer.</li>
-            </ul>
+            <a href="https://github.com/louisoff84/craftpick-Launcher/releases/download/1.0.5/craftpick-Launcher-linux-x86_64.AppImage" class="dl-btn">
+                TÉLÉCHARGER
+                <span class="platform">Linux (AppImage)</span>
+            </a>
+
+            <a href="https://github.com/louisoff84/craftpick-Launcher/releases/download/1.0.5/craftpick-Launcher-mac-universal.dmg" class="dl-btn">
+                TÉLÉCHARGER
+                <span class="platform">macOS (Universal .dmg)</span>
+            </a>
+        </div>
+
+        <div class="instructions-section">
+            <h3>Instructions d'installation :</h3>
+            <div class="instruction-item">
+                <strong>Windows (.exe) :</strong> Double-cliquez sur le fichier `.exe` téléchargé et suivez les instructions.
+            </div>
+            <div class="instruction-item">
+                <strong>macOS (.dmg) :</strong> Ouvrez le fichier `.dmg` et faites glisser l'icône de l'application **Craftpick Launcher** dans votre dossier `Applications`.
+            </div>
+            <div class="instruction-item">
+                <strong>Linux (AppImage) :</strong>
+                <ol>
+                    <li>Téléchargez le fichier `.AppImage`.</li>
+                    <li>Rendez-le exécutable : ouvrez votre terminal, naviguez vers le dossier de téléchargement et tapez : <code>chmod +x craftpick-Launcher-linux-x86_64.AppImage</code></li>
+                    <li>Exécutez-le : double-cliquez ou tapez : <code>./craftpick-Launcher-linux-x86_64.AppImage</code></li>
+                </ol>
+            </div>
         </div>
     </div>
 
