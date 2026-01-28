@@ -1,68 +1,51 @@
 const CONFIG = {
     repo: "louisoff84/craftpick-Launcher",
-    isMaintenance: true, 
-    discord: "https://craftpick.fr/discord"
+    isMaintenance: false // Change juste ici pour couper le site
 };
 
-function init() {
-    const maintScreen = document.getElementById('maint-screen');
-    const siteContent = document.getElementById('site-content');
+async function checkLauncher() {
+    const dlArea = document.getElementById('dl-area');
+    const vLabel = document.getElementById('version-label');
 
-    if (CONFIG.isMaintenance) {
-        if (maintScreen) maintScreen.classList.remove('maint-hidden');
-        if (siteContent) siteContent.classList.add('maint-hidden');
-    } else {
-        if (maintScreen) maintScreen.classList.add('maint-hidden');
-        if (siteContent) siteContent.classList.remove('maint-hidden');
-        if (document.getElementById('dl-area')) fetchGitHub();
-    }
-}
-
-async function fetchGitHub() {
     try {
-        const res = await fetch(`https://api.github.com/repos/${CONFIG.repo}/releases/latest`);
-        const data = await res.json();
+        // Le script demande à GitHub : "Quelle est la version la plus récente ?"
+        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/releases/latest`);
+        const data = await response.json();
         const assets = data.assets;
 
-        // Détection de l'OS du visiteur
-        let userOS = "win"; 
-        if (navigator.platform.toUpperCase().indexOf('MAC') !== -1) userOS = "mac";
-        if (navigator.platform.toUpperCase().indexOf('LINUX') !== -1) userOS = "linux";
+        // Il trie les fichiers automatiquement par extension
+        const files = {
+            win: assets.find(a => a.name.endsWith('.exe')),
+            mac: assets.find(a => a.name.endsWith('.dmg')),
+            lin: assets.find(a => a.name.endsWith('.AppImage'))
+        };
 
-        // Recherche des fichiers dans ta release GitHub
-        const winFile = assets.find(a => a.name.toLowerCase().includes('.exe'));
-        const macFile = assets.find(a => a.name.toLowerCase().includes('.dmg') || a.name.toLowerCase().includes('mac'));
-        const linFile = assets.find(a => a.name.toLowerCase().includes('.appimage') || a.name.toLowerCase().includes('linux'));
+        // Détection de l'ordinateur du joueur
+        let os = "win";
+        if (navigator.platform.includes('Mac')) os = "mac";
+        if (navigator.platform.includes('Linux')) os = "lin";
 
-        const links = { win: winFile, mac: macFile, linux: linFile };
-        
-        // On choisit le fichier à mettre en avant
-        const currentDownload = links[userOS] || winFile; 
+        const mainFile = files[os] || files['win']; // Windows par défaut si OS non reconnu
 
-        document.getElementById('version-label').innerText = `Version ${data.tag_name} disponible`;
-        
-        let htmlBtn = "";
-        if (currentDownload) {
-            htmlBtn = `
-                <a href="${currentDownload.browser_download_url}" class="block bg-green-500 hover:bg-green-400 text-slate-950 font-black py-5 rounded-2xl text-xl transition-all hover:scale-105 shadow-lg shadow-green-500/20">
-                    TÉLÉCHARGER (${userOS.toUpperCase()})
-                </a>`;
-        } else {
-            htmlBtn = `<p class="text-orange-400 text-sm">Fichier non trouvé pour votre OS. <br> <a class="underline" href="https://github.com/${CONFIG.repo}/releases">Voir sur GitHub</a></p>`;
-        }
+        // Mise à jour du texte de version (ex: v1.1.2)
+        vLabel.innerText = `VERSION ${data.tag_name} - MISE À JOUR AUTO`;
 
-        // Ajout des petits liens en dessous pour les autres OS
-        let others = `<div class="flex justify-center gap-4 mt-6 opacity-60 text-xs font-bold">`;
-        if (winFile && userOS !== 'win') others += `<a href="${winFile.browser_download_url}" class="hover:text-white">WINDOWS (.EXE)</a>`;
-        if (macFile && userOS !== 'mac') others += `<a href="${macFile.browser_download_url}" class="hover:text-white">MAC (.DMG)</a>`;
-        if (linFile && userOS !== 'linux') others += `<a href="${linFile.browser_download_url}" class="hover:text-white">LINUX (.APPIMAGE)</a>`;
-        others += `</div>`;
+        // Affichage du bouton de téléchargement dynamique
+        dlArea.innerHTML = `
+            <a href="${mainFile.browser_download_url}" class="block bg-green-500 hover:bg-green-400 text-slate-950 font-black py-5 rounded-2xl text-xl transition-all shadow-lg">
+                TÉLÉCHARGER (${os.toUpperCase()})
+            </a>
+            <div class="flex justify-center gap-4 mt-6 opacity-40 text-[10px] font-bold">
+                ${files.win ? `<a href="${files.win.browser_download_url}">WINDOWS</a>` : ''}
+                ${files.mac ? `<a href="${files.mac.browser_download_url}">MAC</a>` : ''}
+                ${files.lin ? `<a href="${files.lin.browser_download_url}">LINUX</a>` : ''}
+            </div>
+        `;
 
-        document.getElementById('dl-area').innerHTML = htmlBtn + others;
-
-    } catch (e) {
-        document.getElementById('version-label').innerText = "Erreur de chargement GitHub";
+    } catch (error) {
+        vLabel.innerText = "ERREUR DE CONNEXION GITHUB";
     }
 }
 
-init();
+// Lancement automatique
+if (document.getElementById('dl-area')) checkLauncher();
