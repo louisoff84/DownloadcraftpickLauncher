@@ -3,91 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Craftpick MC | Téléchargement</title>
+    <title>Craftpick MC | Launcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: white; }
-        .gradient-text {
-            background: linear-gradient(90deg, #4ade80, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero-bg {
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-        }
-        .loading-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { background-color: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .maintenance-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        body.is-maintenance .maintenance-overlay { display: flex; }
+        body.is-maintenance main, body.is-maintenance nav { display: none; }
+        .admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: #1e293b; border: 1px solid #334155; padding: 2rem; border-radius: 1.5rem; z-index: 10000; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
     </style>
 </head>
-<body class="font-sans antialiased">
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
 
-    <nav class="flex justify-between items-center p-6 max-w-6xl mx-auto">
-        <div class="text-2xl font-bold tracking-tight">Craftpick<span class="text-green-400">MC</span></div>
-        <a href="https://discord.gg/tonlien" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition text-sm font-bold uppercase tracking-widest">Discord</a>
+    <div id="maintenance-screen" class="maintenance-overlay text-center px-6">
+        <i class="fas fa-tools text-6xl text-yellow-500 mb-6"></i>
+        <h1 class="text-4xl font-black mb-4">MAINTENANCE</h1>
+        <p class="text-slate-400 max-w-md">Craftpick MC se refait une beauté. Revenez d'ici quelques minutes !</p>
+        <a href="https://craftpick.fr/discord" class="mt-8 text-blue-400 font-bold underline">Suivre les infos sur Discord</a>
+    </div>
+
+    <div id="admin-panel" class="admin-panel">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold">Admin Panel</h2>
+            <button onclick="toggleAdmin()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <span>Mode Maintenance</span>
+                <button id="maint-btn" onclick="toggleMaintenanceMode()" class="bg-slate-700 px-4 py-2 rounded-lg font-bold text-xs uppercase transition-all">DÉSACTIVÉ</button>
+            </div>
+            <p class="text-[10px] text-slate-500 italic">Note: Le mode maintenance est actuellement géré via LocalStorage pour la démo.</p>
+        </div>
+    </div>
+
+    <nav class="absolute top-0 w-full p-8 flex justify-between items-center max-w-6xl">
+        <div onclick="adminSecretClick()" class="text-2xl font-black cursor-pointer">Craftpick<span class="text-green-500">MC</span></div>
+        <a href="https://craftpick.fr/discord" class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-xl border border-blue-500/20 font-bold text-sm">DISCORD</a>
     </nav>
 
-    <section class="hero-bg min-h-[80vh] flex flex-col justify-center items-center text-center px-4">
-        <div id="version-tag" class="mb-6 inline-block px-4 py-1 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-sm font-medium">
-            Récupération de la version...
+    <main class="w-full max-w-md bg-slate-900/40 border border-white/5 p-10 rounded-[2.5rem] text-center backdrop-blur-3xl shadow-2xl">
+        <div id="version-tag" class="text-[10px] font-black tracking-widest text-slate-500 mb-4 uppercase">Synchronisation...</div>
+        <h2 class="text-3xl font-extrabold mb-8">Télécharger le <span class="text-green-400">Launcher</span></h2>
+        
+        <div id="download-area" class="space-y-4">
+            <div class="animate-pulse bg-slate-800 h-16 rounded-2xl"></div>
         </div>
-        
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
-            Le Launcher <span class="gradient-text">Craftpick</span>
-        </h1>
-        
-        <p class="text-gray-400 text-lg max-w-2xl mb-12">
-            Télécharge la dernière version officielle directement depuis nos serveurs GitHub pour garantir une sécurité maximale.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-5" id="download-area">
-            <div class="animate-pulse bg-slate-800 h-16 w-64 rounded-xl"></div>
-        </div>
-        
-        <p class="mt-8 text-xs text-gray-500 uppercase tracking-widest">Hébergé de manière sécurisée sur GitHub</p>
-    </section>
+    </main>
 
     <script>
-        // Configuration de ton API GitHub
-        const repo = "louisoff84/craftpick-Launcher";
-        const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
+        const REPO = "louisoff84/craftpick-Launcher";
+        let clickCount = 0;
 
-        async function fetchLauncher() {
-            const downloadArea = document.getElementById('download-area');
-            const versionTag = document.getElementById('version-tag');
-
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (data.assets && data.assets.length > 0) {
-                    // On cherche le fichier .exe ou le premier asset disponible
-                    const exeAsset = data.assets.find(asset => asset.name.endsWith('.exe')) || data.assets[0];
-                    const version = data.tag_name;
-
-                    versionTag.innerHTML = `Dernière version : ${version}`;
-                    
-                    downloadArea.innerHTML = `
-                        <a href="${exeAsset.browser_download_url}" class="bg-green-500 hover:bg-green-600 text-slate-900 font-black py-4 px-10 rounded-xl text-lg flex items-center justify-center transition-all transform hover:-translate-y-1 shadow-lg shadow-green-500/20">
-                            <i class="fas fa-download mr-3"></i> TÉLÉCHARGER (${exeAsset.name})
-                        </a>
-                        <a href="https://github.com/${repo}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-10 rounded-xl text-lg flex items-center justify-center transition-all">
-                            <i class="fab fa-github mr-3"></i> VOIR LE CODE
-                        </a>
-                    `;
-                } else {
-                    versionTag.innerHTML = "Aucune version publiée sur GitHub";
-                    downloadArea.innerHTML = `<p class="text-red-400">Créez une 'Release' sur GitHub pour activer le téléchargement.</p>`;
-                }
-            } catch (error) {
-                console.error("Erreur API:", error);
-                versionTag.innerHTML = "Erreur de connexion";
-                downloadArea.innerHTML = `<a href="https://github.com/${repo}/releases" class="bg-red-500 p-4 rounded">Voir sur GitHub</a>`;
+        // --- GESTION MAINTENANCE ---
+        function checkMaintenance() {
+            const isMaint = localStorage.getItem('maintenance') === 'true';
+            if(isMaint) {
+                document.body.classList.add('is-maintenance');
+                document.getElementById('maint-btn').innerText = "ACTIVÉ";
+                document.getElementById('maint-btn').classList.replace('bg-slate-700', 'bg-red-500');
+            } else {
+                document.body.classList.remove('is-maintenance');
+                document.getElementById('maint-btn').innerText = "DÉSACTIVÉ";
+                document.getElementById('maint-btn').classList.replace('bg-red-500', 'bg-slate-700');
             }
         }
 
-        fetchLauncher();
-    </script>
+        function toggleMaintenanceMode() {
+            const current = localStorage.getItem('maintenance') === 'true';
+            localStorage.setItem('maintenance', !current);
+            checkMaintenance();
+            alert("Mode maintenance : " + (!current ? "ACTIVÉ" : "DÉSACTIVÉ"));
+        }
 
+        // --- PANEL ADMIN CACHÉ ---
+        function toggleAdmin() {
+            const panel = document.getElementById('admin-panel');
+            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function adminSecretClick() {
+            clickCount++;
+            if(clickCount >= 5) { toggleAdmin(); clickCount = 0; }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if(e.key.toLowerCase() === 'a') toggleAdmin();
+        });
+
+        // --- API GITHUB ---
+        async function loadLauncher() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`);
+                const data = await res.json();
+                document.getElementById('version-tag').innerText = `Version ${data.tag_name} Stable`;
+
+                const assets = data.assets;
+                const win = assets.find(a => a.name.endsWith('.exe'))?.browser_download_url;
+                const mac = assets.find(a => a.name.endsWith('.dmg'))?.browser_download_url;
+                const lin = assets.find(a => a.name.endsWith('.AppImage'))?.browser_download_url;
+
+                let os = "Windows";
+                let url = win;
+                if(navigator.platform.includes('Mac')) { os = "macOS"; url = mac; }
+                if(navigator.platform.includes('Linux')) { os = "Linux"; url = lin; }
+
+                document.getElementById('download-area').innerHTML = `
+                    <a href="${url || win}" class="flex items-center justify-center gap-3 bg-green-500 hover:bg-green-400 text-black font-black py-5 rounded-2xl w-full text-lg transition-all transform hover:scale-[1.02]">
+                        <i class="fas fa-download"></i> POUR ${os.toUpperCase()}
+                    </a>
+                    <div class="flex justify-center gap-4 mt-4 opacity-50">
+                        ${mac ? `<a href="${mac}" class="hover:text-white text-xs">Mac</a>` : ''}
+                        ${lin ? `<a href="${lin}" class="hover:text-white text-xs">Linux</a>` : ''}
+                    </div>
+                `;
+            } catch(e) {
+                document.getElementById('version-tag').innerText = "Offline";
+            }
+        }
+
+        // Initialisation
+        checkMaintenance();
+        loadLauncher();
+    </script>
 </body>
 </html>
