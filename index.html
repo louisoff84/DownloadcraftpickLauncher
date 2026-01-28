@@ -6,126 +6,28 @@
     <title>Craftpick MC | Launcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
-        body { background-color: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        .maintenance-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        body.is-maintenance .maintenance-overlay { display: flex; }
-        body.is-maintenance main, body.is-maintenance nav { display: none; }
-        .admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: #1e293b; border: 1px solid #334155; padding: 2rem; border-radius: 1.5rem; z-index: 10000; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6">
+<body class="bg-[#020617] text-white font-sans min-h-screen flex items-center justify-center">
 
-    <div id="maintenance-screen" class="maintenance-overlay text-center px-6">
-        <i class="fas fa-tools text-6xl text-yellow-500 mb-6"></i>
-        <h1 class="text-4xl font-black mb-4">MAINTENANCE</h1>
-        <p class="text-slate-400 max-w-md">Craftpick MC se refait une beauté. Revenez d'ici quelques minutes !</p>
-        <a href="https://craftpick.fr/discord" class="mt-8 text-blue-400 font-bold underline">Suivre les infos sur Discord</a>
+    <div id="maint-screen" class="hidden fixed inset-0 bg-[#020617] z-[100] flex flex-col items-center justify-center">
+        <h1 class="text-5xl font-black text-yellow-500 mb-4 tracking-tighter">MAINTENANCE</h1>
+        <p class="text-slate-400">Craftpick revient bientôt. Patience !</p>
     </div>
 
-    <div id="admin-panel" class="admin-panel">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold">Admin Panel</h2>
-            <button onclick="toggleAdmin()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="space-y-6">
-            <div class="flex justify-between items-center">
-                <span>Mode Maintenance</span>
-                <button id="maint-btn" onclick="toggleMaintenanceMode()" class="bg-slate-700 px-4 py-2 rounded-lg font-bold text-xs uppercase transition-all">DÉSACTIVÉ</button>
+    <main id="main-content" class="text-center px-6">
+        <div class="text-3xl font-black mb-12">Craftpick<span class="text-green-500">MC</span></div>
+        <div class="bg-slate-900/50 p-10 rounded-[2.5rem] border border-white/5 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-8">Télécharger le Launcher</h2>
+            <div id="dl-zone">
+                <div class="animate-pulse bg-slate-800 h-16 w-64 rounded-2xl mx-auto"></div>
             </div>
-            <p class="text-[10px] text-slate-500 italic">Note: Le mode maintenance est actuellement géré via LocalStorage pour la démo.</p>
+            <div id="v-tag" class="mt-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Recherche...</div>
         </div>
-    </div>
-
-    <nav class="absolute top-0 w-full p-8 flex justify-between items-center max-w-6xl">
-        <div onclick="adminSecretClick()" class="text-2xl font-black cursor-pointer">Craftpick<span class="text-green-500">MC</span></div>
-        <a href="https://craftpick.fr/discord" class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-xl border border-blue-500/20 font-bold text-sm">DISCORD</a>
-    </nav>
-
-    <main class="w-full max-w-md bg-slate-900/40 border border-white/5 p-10 rounded-[2.5rem] text-center backdrop-blur-3xl shadow-2xl">
-        <div id="version-tag" class="text-[10px] font-black tracking-widest text-slate-500 mb-4 uppercase">Synchronisation...</div>
-        <h2 class="text-3xl font-extrabold mb-8">Télécharger le <span class="text-green-400">Launcher</span></h2>
-        
-        <div id="download-area" class="space-y-4">
-            <div class="animate-pulse bg-slate-800 h-16 rounded-2xl"></div>
-        </div>
+        <a href="https://craftpick.fr/discord" class="inline-block mt-10 text-slate-500 hover:text-blue-400 transition font-bold text-sm uppercase italic">craftpick.fr/discord</a>
     </main>
 
-    <script>
-        const REPO = "louisoff84/craftpick-Launcher";
-        let clickCount = 0;
-
-        // --- GESTION MAINTENANCE ---
-        function checkMaintenance() {
-            const isMaint = localStorage.getItem('maintenance') === 'true';
-            if(isMaint) {
-                document.body.classList.add('is-maintenance');
-                document.getElementById('maint-btn').innerText = "ACTIVÉ";
-                document.getElementById('maint-btn').classList.replace('bg-slate-700', 'bg-red-500');
-            } else {
-                document.body.classList.remove('is-maintenance');
-                document.getElementById('maint-btn').innerText = "DÉSACTIVÉ";
-                document.getElementById('maint-btn').classList.replace('bg-red-500', 'bg-slate-700');
-            }
-        }
-
-        function toggleMaintenanceMode() {
-            const current = localStorage.getItem('maintenance') === 'true';
-            localStorage.setItem('maintenance', !current);
-            checkMaintenance();
-            alert("Mode maintenance : " + (!current ? "ACTIVÉ" : "DÉSACTIVÉ"));
-        }
-
-        // --- PANEL ADMIN CACHÉ ---
-        function toggleAdmin() {
-            const panel = document.getElementById('admin-panel');
-            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function adminSecretClick() {
-            clickCount++;
-            if(clickCount >= 5) { toggleAdmin(); clickCount = 0; }
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if(e.key.toLowerCase() === 'a') toggleAdmin();
-        });
-
-        // --- API GITHUB ---
-        async function loadLauncher() {
-            try {
-                const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`);
-                const data = await res.json();
-                document.getElementById('version-tag').innerText = `Version ${data.tag_name} Stable`;
-
-                const assets = data.assets;
-                const win = assets.find(a => a.name.endsWith('.exe'))?.browser_download_url;
-                const mac = assets.find(a => a.name.endsWith('.dmg'))?.browser_download_url;
-                const lin = assets.find(a => a.name.endsWith('.AppImage'))?.browser_download_url;
-
-                let os = "Windows";
-                let url = win;
-                if(navigator.platform.includes('Mac')) { os = "macOS"; url = mac; }
-                if(navigator.platform.includes('Linux')) { os = "Linux"; url = lin; }
-
-                document.getElementById('download-area').innerHTML = `
-                    <a href="${url || win}" class="flex items-center justify-center gap-3 bg-green-500 hover:bg-green-400 text-black font-black py-5 rounded-2xl w-full text-lg transition-all transform hover:scale-[1.02]">
-                        <i class="fas fa-download"></i> POUR ${os.toUpperCase()}
-                    </a>
-                    <div class="flex justify-center gap-4 mt-4 opacity-50">
-                        ${mac ? `<a href="${mac}" class="hover:text-white text-xs">Mac</a>` : ''}
-                        ${lin ? `<a href="${lin}" class="hover:text-white text-xs">Linux</a>` : ''}
-                    </div>
-                `;
-            } catch(e) {
-                document.getElementById('version-tag').innerText = "Offline";
-            }
-        }
-
-        // Initialisation
-        checkMaintenance();
-        loadLauncher();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
