@@ -6,28 +6,26 @@
     <title>Craftpick MC | Launcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #020617; color: white; font-family: 'Inter', sans-serif; }
-        .maint-hidden { display: none !important; }
-    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center">
+<body class="bg-[#020617] text-white min-h-screen flex items-center justify-center font-sans">
 
-    <div id="maint-screen" class="maint-hidden fixed inset-0 bg-[#020617] z-50 flex flex-col items-center justify-center text-center p-6">
-        <i class="fas fa-hammer text-5xl text-yellow-500 mb-6"></i>
-        <h1 class="text-4xl font-black mb-2">MAINTENANCE</h1>
-        <p class="text-slate-400">Craftpick se prépare pour une mise à jour.</p>
-        <a href="https://craftpick.fr/discord" class="mt-8 text-blue-400 font-bold underline">Rejoindre le Discord</a>
+    <div id="maint-screen" class="hidden fixed inset-0 bg-[#020617] z-50 flex flex-col items-center justify-center text-center p-6">
+        <div class="bg-yellow-500/10 p-6 rounded-full mb-6">
+            <i class="fas fa-tools text-5xl text-yellow-500"></i>
+        </div>
+        <h1 class="text-4xl font-black mb-2 tracking-tighter">CRAFTPICK EN MAINTENANCE</h1>
+        <p class="text-slate-400 max-w-sm">Nous effectuons des mises à jour sur le launcher. Rejoignez le Discord pour savoir quand nous serons de retour.</p>
+        <a href="https://craftpick.fr/discord" class="mt-8 bg-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition">DISCORD</a>
     </div>
 
-    <main id="site-content" class="w-full max-w-md text-center">
-        <div class="text-3xl font-black mb-10">Craftpick<span class="text-green-500">MC</span></div>
-        <div class="bg-slate-900 border border-white/5 p-10 rounded-[2.5rem] shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6">Launcher Officiel</h2>
+    <main id="site-content" class="w-full max-w-sm text-center">
+        <div class="text-3xl font-black mb-12">Craftpick<span class="text-green-500">MC</span></div>
+        <div class="bg-slate-900/50 border border-white/5 p-8 rounded-[2.5rem] shadow-2xl backdrop-blur-md">
+            <h2 class="text-xl font-bold mb-8">Télécharger le Launcher</h2>
             <div id="dl-area">
                 <div class="animate-pulse bg-slate-800 h-16 rounded-2xl"></div>
             </div>
-            <p id="version-label" class="mt-6 text-[10px] text-slate-500 font-bold tracking-widest uppercase">Sync GitHub...</p>
+            <p id="version-label" class="mt-8 text-[10px] text-slate-500 font-black tracking-widest uppercase italic"></p>
         </div>
     </main>
 
