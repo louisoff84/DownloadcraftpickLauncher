@@ -1,51 +1,64 @@
 const CONFIG = {
     repo: "louisoff84/craftpick-Launcher",
-    isMaintenance: false // Change juste ici pour couper le site
+    // ---------------------------------------------------------
+    isMaintenance: false, // CHANGE ICI : true = maintenance / false = en ligne
+    // ---------------------------------------------------------
+    discord: "https://craftpick.fr/discord"
 };
 
-async function checkLauncher() {
-    const dlArea = document.getElementById('dl-area');
-    const vLabel = document.getElementById('version-label');
+async function init() {
+    const maintScreen = document.getElementById('maint-screen');
+    const siteContent = document.getElementById('site-content');
+    const statusLabel = document.getElementById('admin-status');
 
+    // 1. Gestion de la Maintenance
+    if (CONFIG.isMaintenance) {
+        if (maintScreen) maintScreen.classList.remove('hidden');
+        if (siteContent) siteContent.classList.add('hidden');
+        if (statusLabel) {
+            statusLabel.innerText = "ACTIVÉE";
+            statusLabel.className = "text-red-500 font-bold";
+        }
+    } else {
+        if (maintScreen) maintScreen.classList.add('hidden');
+        if (siteContent) siteContent.classList.remove('hidden');
+        if (statusLabel) {
+            statusLabel.innerText = "DÉSACTIVÉE (Site en ligne)";
+            statusLabel.className = "text-green-500 font-bold";
+        }
+        // Charger GitHub seulement si pas de maintenance
+        if (document.getElementById('dl-area')) fetchGitHub();
+    }
+}
+
+async function fetchGitHub() {
     try {
-        // Le script demande à GitHub : "Quelle est la version la plus récente ?"
-        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/releases/latest`);
-        const data = await response.json();
+        const res = await fetch(`https://api.github.com/repos/${CONFIG.repo}/releases/latest`);
+        const data = await res.json();
         const assets = data.assets;
 
-        // Il trie les fichiers automatiquement par extension
         const files = {
             win: assets.find(a => a.name.endsWith('.exe')),
             mac: assets.find(a => a.name.endsWith('.dmg')),
             lin: assets.find(a => a.name.endsWith('.AppImage'))
         };
 
-        // Détection de l'ordinateur du joueur
         let os = "win";
         if (navigator.platform.includes('Mac')) os = "mac";
         if (navigator.platform.includes('Linux')) os = "lin";
 
-        const mainFile = files[os] || files['win']; // Windows par défaut si OS non reconnu
+        const mainFile = files[os] || files['win'];
 
-        // Mise à jour du texte de version (ex: v1.1.2)
-        vLabel.innerText = `VERSION ${data.tag_name} - MISE À JOUR AUTO`;
-
-        // Affichage du bouton de téléchargement dynamique
-        dlArea.innerHTML = `
+        document.getElementById('version-label').innerText = `Version ${data.tag_name} (Auto-Update)`;
+        document.getElementById('dl-area').innerHTML = `
             <a href="${mainFile.browser_download_url}" class="block bg-green-500 hover:bg-green-400 text-slate-950 font-black py-5 rounded-2xl text-xl transition-all shadow-lg">
-                TÉLÉCHARGER (${os.toUpperCase()})
+                TÉLÉCHARGER
             </a>
-            <div class="flex justify-center gap-4 mt-6 opacity-40 text-[10px] font-bold">
-                ${files.win ? `<a href="${files.win.browser_download_url}">WINDOWS</a>` : ''}
-                ${files.mac ? `<a href="${files.mac.browser_download_url}">MAC</a>` : ''}
-                ${files.lin ? `<a href="${files.lin.browser_download_url}">LINUX</a>` : ''}
-            </div>
+            <p class="mt-2 text-[10px] text-slate-500 italic">Fichier détecté : ${mainFile.name}</p>
         `;
-
-    } catch (error) {
-        vLabel.innerText = "ERREUR DE CONNEXION GITHUB";
+    } catch (e) {
+        document.getElementById('version-label').innerText = "Erreur de synchro GitHub";
     }
 }
 
-// Lancement automatique
-if (document.getElementById('dl-area')) checkLauncher();
+init();
