@@ -4,24 +4,29 @@
     <meta charset="UTF-8">
     <title>Craftpick Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-950 text-white p-10">
-    <div class="max-w-xl mx-auto bg-slate-900 p-8 rounded-3xl border border-white/10">
-        <h1 class="text-2xl font-black mb-6">Craftpick Console</h1>
-        
-        <div class="p-4 rounded-2xl bg-slate-800 mb-6">
-            <p class="text-sm mb-2">Statut actuel du script :</p>
-            <div id="status-indicator" class="font-bold text-lg italic uppercase">Chargement...</div>
-        </div>
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md bg-slate-900 border border-white/10 p-8 rounded-3xl shadow-2xl">
+        <h1 class="text-2xl font-black mb-6 flex items-center gap-3">
+            <i class="fas fa-user-shield text-green-500"></i> Panel Craftpick
+        </h1>
 
-        <div class="text-sm text-slate-400 space-y-4">
-            <p>ℹ️ <strong>Pour changer l'état :</strong></p>
-            <ol class="list-decimal ml-5 space-y-2">
-                <li>Ouvre <code>script.js</code> dans ton éditeur.</li>
-                <li>Modifie la ligne <code>isMaintenance: false</code> en <code>true</code>.</li>
-                <li>Enregistre et publie (push) sur ton hébergeur.</li>
-            </ol>
+        <div class="space-y-6">
+            <div class="bg-slate-800 p-4 rounded-2xl border border-white/5">
+                <p class="text-xs text-slate-500 uppercase font-bold mb-1">Statut Maintenance</p>
+                <div id="admin-status" class="text-lg">Chargement...</div>
+            </div>
+
+            <div class="text-sm text-slate-400 bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
+                <p class="font-bold text-blue-400 mb-2"><i class="fas fa-info-circle"></i> Comment changer ?</p>
+                <p>1. Ouvre <strong>script.js</strong></p>
+                <p>2. Ligne 3, change <code>isMaintenance: false</code></p>
+                <p>3. Enregistre et publie sur GitHub.</p>
+            </div>
         </div>
+        
+        <a href="index.html" class="block mt-8 text-center text-xs text-slate-500 hover:text-white transition underline">Retour au site</a>
     </div>
     <script src="script.js"></script>
 </body>
