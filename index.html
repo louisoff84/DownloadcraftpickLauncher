@@ -3,243 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécharger Craftpick - PixelBattles</title>
+    <title>Craftpick MC | Téléchargement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- STYLE GENERAL (Thème Sombre PixelBattles) --- */
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+        body { background-color: #0f172a; color: white; }
+        .gradient-text {
+            background: linear-gradient(90deg, #4ade80, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        /* --- HEADER --- */
-        header { text-align: center; padding: 40px 20px; }
-        .main-title { font-size: 3em; margin: 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
-        .pixel { color: #d32f2f; }
-        .craft { color: #ffa000; }
-        .subtitle { font-size: 1.2em; color: #a0a0a0; margin-top: 10px; }
-
-        /* --- CONTAINER --- */
-        .container {
-            background-color: #1e1e1e;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 800px;
-            width: 90%;
-            text-align: center;
-            border: 1px solid #333;
+        .hero-bg {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
         }
-
-        /* --- VERSION BADGE --- */
-        .version-badge {
-            display: inline-block;
-            background-color: #333;
-            color: #ffa000;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-            font-weight: bold;
-            border: 1px solid #ffa000;
-        }
-        
-        /* Animation de chargement */
-        .loading { opacity: 0.6; font-style: italic; }
-
-        /* --- GRID TELECHARGEMENT --- */
-        .download-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-            margin-top: 20px;
-        }
-
-        .dl-card {
-            background-color: #2c2c2c;
-            padding: 20px;
-            border-radius: 10px;
-            transition: all 0.2s;
-            text-decoration: none;
-            color: white;
-            border: 2px solid transparent;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Carte désactivée tant que l'API ne répond pas */
-        .dl-card.disabled {
-            pointer-events: none;
-            opacity: 0.5;
-            filter: grayscale(100%);
-        }
-
-        .dl-card:hover {
-            transform: translateY(-5px);
-            background-color: #383838;
-            border-color: #ffa000;
-        }
-
-        .os-icon { font-size: 2.5em; margin-bottom: 10px; }
-        .os-name { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
-        .file-info { font-size: 0.8em; color: #888; }
-
-        /* --- INSTRUCTIONS & FOOTER --- */
-        .instructions {
-            text-align: left;
-            background-color: #252525;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            font-size: 0.95em;
-        }
-        .instructions h3 { color: #d32f2f; margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        .instructions li { margin-bottom: 8px; color: #ccc; }
-        footer { margin-top: auto; padding: 20px; color: #666; font-size: 0.8em; text-align: center; }
+        .loading-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
-<body>
+<body class="font-sans antialiased">
 
-    <header>
-        <h1 class="main-title">
-            <span class="pixel">PIXELBATTLES</span> <span style="color:#555">x</span> <span class="craft">CRAFTPICK</span>
-        </h1>
-        <p class="subtitle">Le launcher officiel auto-updatable.</p>
-    </header>
+    <nav class="flex justify-between items-center p-6 max-w-6xl mx-auto">
+        <div class="text-2xl font-bold tracking-tight">Craftpick<span class="text-green-400">MC</span></div>
+        <a href="https://discord.gg/tonlien" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition text-sm font-bold uppercase tracking-widest">Discord</a>
+    </nav>
 
-    <div class="container">
-        <div id="version-display" class="version-badge loading">Recherche de la dernière version...</div>
+    <section class="hero-bg min-h-[80vh] flex flex-col justify-center items-center text-center px-4">
+        <div id="version-tag" class="mb-6 inline-block px-4 py-1 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-sm font-medium">
+            Récupération de la version...
+        </div>
         
-        <h2>Télécharger le Launcher</h2>
-        <p style="margin-bottom: 30px; color: #ccc;">
-            Installation automatique des mods et optimisations pour PixelBattles.
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
+            Le Launcher <span class="gradient-text">Craftpick</span>
+        </h1>
+        
+        <p class="text-gray-400 text-lg max-w-2xl mb-12">
+            Télécharge la dernière version officielle directement depuis nos serveurs GitHub pour garantir une sécurité maximale.
         </p>
 
-        <div class="download-grid">
-            <a href="#" id="btn-win" class="dl-card disabled">
-                <div class="os-icon">🪟</div>
-                <div class="os-name">Windows</div>
-                <div class="file-info" id="info-win">Recherche .exe...</div>
-            </a>
-
-            <a href="#" id="btn-linux" class="dl-card disabled">
-                <div class="os-icon">🐧</div>
-                <div class="os-name">Linux</div>
-                <div class="file-info" id="info-linux">Recherche .AppImage...</div>
-            </a>
-
-            <a href="#" id="btn-mac" class="dl-card disabled">
-                <div class="os-icon">🍎</div>
-                <div class="os-name">macOS</div>
-                <div class="file-info" id="info-mac">Recherche .dmg...</div>
-            </a>
+        <div class="flex flex-col sm:flex-row gap-5" id="download-area">
+            <div class="animate-pulse bg-slate-800 h-16 w-64 rounded-xl"></div>
         </div>
-
-        <div class="instructions">
-            <h3>📌 État du système</h3>
-            <ul id="status-log">
-                <li>Connexion à l'API GitHub...</li>
-            </ul>
-        </div>
-    </div>
-
-    <footer>
-        &copy; 2025 PixelBattles. Données récupérées via GitHub API.
-    </footer>
+        
+        <p class="mt-8 text-xs text-gray-500 uppercase tracking-widest">Hébergé de manière sécurisée sur GitHub</p>
+    </section>
 
     <script>
-        // Configuration
-        const REPO_OWNER = "louisoff84";
-        const REPO_NAME = "craftpick-Launcher";
-        const API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`;
+        // Configuration de ton API GitHub
+        const repo = "louisoff84/craftpick-Launcher";
+        const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
 
-        // Éléments du DOM
-        const elVersion = document.getElementById('version-display');
-        const elStatus = document.getElementById('status-log');
-        
-        const btnWin = document.getElementById('btn-win');
-        const btnLinux = document.getElementById('btn-linux');
-        const btnMac = document.getElementById('btn-mac');
+        async function fetchLauncher() {
+            const downloadArea = document.getElementById('download-area');
+            const versionTag = document.getElementById('version-tag');
 
-        // Fonction pour mettre à jour le statut
-        function logStatus(message) {
-            const li = document.createElement('li');
-            li.textContent = message;
-            elStatus.appendChild(li);
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.assets && data.assets.length > 0) {
+                    // On cherche le fichier .exe ou le premier asset disponible
+                    const exeAsset = data.assets.find(asset => asset.name.endsWith('.exe')) || data.assets[0];
+                    const version = data.tag_name;
+
+                    versionTag.innerHTML = `Dernière version : ${version}`;
+                    
+                    downloadArea.innerHTML = `
+                        <a href="${exeAsset.browser_download_url}" class="bg-green-500 hover:bg-green-600 text-slate-900 font-black py-4 px-10 rounded-xl text-lg flex items-center justify-center transition-all transform hover:-translate-y-1 shadow-lg shadow-green-500/20">
+                            <i class="fas fa-download mr-3"></i> TÉLÉCHARGER (${exeAsset.name})
+                        </a>
+                        <a href="https://github.com/${repo}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-10 rounded-xl text-lg flex items-center justify-center transition-all">
+                            <i class="fab fa-github mr-3"></i> VOIR LE CODE
+                        </a>
+                    `;
+                } else {
+                    versionTag.innerHTML = "Aucune version publiée sur GitHub";
+                    downloadArea.innerHTML = `<p class="text-red-400">Créez une 'Release' sur GitHub pour activer le téléchargement.</p>`;
+                }
+            } catch (error) {
+                console.error("Erreur API:", error);
+                versionTag.innerHTML = "Erreur de connexion";
+                downloadArea.innerHTML = `<a href="https://github.com/${repo}/releases" class="bg-red-500 p-4 rounded">Voir sur GitHub</a>`;
+            }
         }
 
-        // Récupération des données
-        fetch(API_URL)
-            .then(response => {
-                if (!response.ok) throw new Error("Impossible de contacter GitHub");
-                return response.json();
-            })
-            .then(data => {
-                // 1. Mise à jour de la version affichée
-                elVersion.textContent = `Dernière version : ${data.tag_name}`;
-                elVersion.classList.remove('loading');
-                logStatus(`Version ${data.tag_name} détectée.`);
-
-                // 2. Recherche des fichiers dans les "assets"
-                // On boucle sur tous les fichiers de la release
-                data.assets.forEach(asset => {
-                    const fileName = asset.name.toLowerCase();
-                    const downloadUrl = asset.browser_download_url;
-
-                    // Détection Windows (.exe)
-                    if (fileName.endsWith('.exe')) {
-                        btnWin.href = downloadUrl;
-                        btnWin.classList.remove('disabled');
-                        document.getElementById('info-win').textContent = "Télécharger .exe";
-                    }
-
-                    // Détection Linux (.AppImage)
-                    if (fileName.endsWith('.appimage')) {
-                        btnLinux.href = downloadUrl;
-                        btnLinux.classList.remove('disabled');
-                        document.getElementById('info-linux').textContent = "Télécharger .AppImage";
-                    }
-
-                    // Détection Mac (.dmg)
-                    if (fileName.endsWith('.dmg')) {
-                        btnMac.href = downloadUrl;
-                        btnMac.classList.remove('disabled');
-                        document.getElementById('info-mac').textContent = "Télécharger .dmg";
-                    }
-                });
-
-                // Lien de secours si un fichier n'est pas trouvé
-                const releaseUrl = data.html_url; // Lien vers la page GitHub
-                if(btnWin.classList.contains('disabled')) { btnWin.href = releaseUrl; btnWin.classList.remove('disabled'); document.getElementById('info-win').textContent = "Voir sur GitHub"; }
-                if(btnLinux.classList.contains('disabled')) { btnLinux.href = releaseUrl; btnLinux.classList.remove('disabled'); document.getElementById('info-linux').textContent = "Voir sur GitHub"; }
-                if(btnMac.classList.contains('disabled')) { btnMac.href = releaseUrl; btnMac.classList.remove('disabled'); document.getElementById('info-mac').textContent = "Voir sur GitHub"; }
-
-                logStatus("Liens de téléchargement mis à jour.");
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                elVersion.textContent = "Erreur de chargement version";
-                elVersion.style.color = "red";
-                logStatus("Erreur : Impossible de récupérer les fichiers sur GitHub.");
-                
-                // En cas d'erreur, on redirige tout vers la page des releases
-                const fallbackUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/releases`;
-                btnWin.href = fallbackUrl; btnWin.classList.remove('disabled');
-                btnLinux.href = fallbackUrl; btnLinux.classList.remove('disabled');
-                btnMac.href = fallbackUrl; btnMac.classList.remove('disabled');
-            });
+        fetchLauncher();
     </script>
 
 </body>
